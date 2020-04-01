@@ -65,27 +65,6 @@ function locate(load: { address: string }) {
 }
 grafanaRuntime.SystemJS.registry.set('plugin-loader', grafanaRuntime.SystemJS.newModule({ locate: locate }));
 
-grafanaRuntime.SystemJS.config({
-  baseURL: 'public',
-  defaultExtension: 'js',
-  packages: {
-    plugins: {
-      defaultExtension: 'js',
-    },
-  },
-  map: {
-    text: 'vendor/plugin-text/text.js',
-    css: 'vendor/plugin-css/css.js',
-  },
-  meta: {
-    '/*': {
-      esModule: true,
-      authorization: true,
-      loader: 'plugin-loader',
-    },
-  },
-});
-
 function exposeToPlugin(name: string, component: any) {
   grafanaRuntime.SystemJS.registerDynamic(name, [], true, (require: any, exports: any, module: { exports: any }) => {
     module.exports = component;
