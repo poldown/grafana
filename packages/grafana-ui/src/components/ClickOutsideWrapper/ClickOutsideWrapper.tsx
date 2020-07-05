@@ -40,8 +40,10 @@ export class ClickOutsideWrapper extends PureComponent<Props, State> {
   }
 
   onOutsideClick = (event: any) => {
-    const domNode = ReactDOM.findDOMNode(this) as Element;
-
+    let domNode = null;
+    try {
+      domNode = ReactDOM.findDOMNode(this) as Element;
+    } catch (ex) {}
     if (!domNode || !domNode.contains(event.target)) {
       this.props.onClick();
     }

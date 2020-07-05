@@ -26,6 +26,11 @@ const modes: Array<SelectableValue<ThresholdsMode>> = [
     label: 'Percentage',
     description: 'Pick threshold based on the percent between min/max',
   },
+  {
+    value: ThresholdsMode.FieldBased,
+    label: 'Field Based',
+    description: "Pick threshold based on a specific data field's value",
+  },
 ];
 
 export interface Props {
@@ -103,6 +108,13 @@ export class ThresholdsEditor extends PureComponent<Props, State> {
 
     sortThresholds(steps);
     this.setState({ steps });
+  };
+
+  onFieldNameChanged = (event: React.ChangeEvent<HTMLInputElement>, value?: string) => {
+    this.props.onChange({
+      ...this.props.thresholds,
+      fieldName: event.target.value,
+    });
   };
 
   onChangeThresholdColor = (threshold: ThresholdWithKey, color: string) => {
@@ -217,11 +229,21 @@ export class ThresholdsEditor extends PureComponent<Props, State> {
                   })}
               </div>
 
-              <div>
+              <div className={styles.thresholdsMode}>
                 <Label description="Percentage means thresholds relative to min & max">Thresholds mode</Label>
                 <FullWidthButtonContainer>
                   <RadioButtonGroup size="sm" options={modes} onChange={this.onModeChanged} value={thresholds.mode} />
                 </FullWidthButtonContainer>
+              </div>
+              <div>
+                <Label description="Field name to use when overriding thresholds values">Field Name</Label>
+                <Input
+                  type="text"
+                  onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                    this.onFieldNameChanged(event, thresholds.fieldName)
+                  }
+                  value={thresholds.fieldName}
+                />
               </div>
             </div>
           );
@@ -254,17 +276,19 @@ function toThresholdsWithKey(steps?: Threshold[]): ThresholdWithKey[] {
 export function thresholdsWithoutKey(thresholds: ThresholdsConfig, steps: ThresholdWithKey[]): ThresholdsConfig {
   const mode = thresholds.mode ?? ThresholdsMode.Absolute;
   return {
-    mode,
+    mode: mode,
     steps: steps.map(t => {
       const { key, ...rest } = t;
       return rest; // everything except key
     }),
+    fieldName: thresholds.fieldName,
   };
 }
 
 interface ThresholdStyles {
   wrapper: string;
   thresholds: string;
+  thresholdsMode: string;
   item: string;
   colorPicker: string;
   addButton: string;
@@ -284,6 +308,9 @@ const getStyles = stylesFactory(
       thresholds: css`
         display: flex;
         flex-direction: column;
+        margin-bottom: ${theme.spacing.formSpacingBase * 2}px;
+      `,
+      thresholdsMode: css`
         margin-bottom: ${theme.spacing.formSpacingBase * 2}px;
       `,
       item: css`

@@ -14,6 +14,7 @@ import {
   InterpolateFunction,
   LinkModel,
   TimeZone,
+  ThresholdsMode,
 } from '../types';
 import { DataFrameView } from '../dataframe/DataFrameView';
 import { GraphSeriesValue } from '../types/graph';
@@ -23,6 +24,7 @@ import { ScopedVars } from '../types/ScopedVars';
 import { getTimeField } from '../dataframe/processDataFrame';
 import { getFieldMatcher } from '../transformations';
 import { FieldMatcherID } from '../transformations/matchers/ids';
+import { toNumber, cloneDeep } from 'lodash';
 
 /**
  * Options for how to turn DataFrames into an array of display values
@@ -122,7 +124,33 @@ export const getFieldDisplayValues = (options: GetFieldDisplayValuesOptions): Fi
           continue;
         }
 
-        const config = field.config; // already set by the prepare task
+        const config = cloneDeep(field.config); // already set by the prepare task
+
+        // RADGREEN - override threshold values with field (from config.thresholds.fieldName) value
+        if (config.thresholds && config.thresholds.mode == ThresholdsMode.FieldBased) {
+          const fieldName = config.thresholds.fieldName;
+          if (fieldName) {
+            let stepsStr;
+            if (field.labels && field.labels[fieldName]) stepsStr = field.labels[fieldName];
+            else {
+              const _f = series.fields.find((val, ind, obj) => {
+                return val.name == fieldName;
+              });
+              if (_f) {
+                stepsStr = _f.values.get(0);
+              }
+            }
+            if (stepsStr) {
+              const steps = stepsStr.split(',');
+              config.min = toNumber(steps[0]);
+              config.max = toNumber(steps[steps.length - 1]);
+              for (let i = 1; i < config.thresholds.steps.length && i < steps.length - 1; i++) {
+                config.thresholds.steps[i].value = toNumber(steps[i]);
+              }
+            }
+          }
+        }
+
         const displayName = field.config.displayName ?? defaultDisplayName;
 
         const display =

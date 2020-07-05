@@ -11,6 +11,7 @@ export interface FooterLink {
 
 export let getFooterLinks = (): FooterLink[] => {
   return [
+    /*
     {
       text: 'Documentation',
       icon: 'document-info',
@@ -29,25 +30,27 @@ export let getFooterLinks = (): FooterLink[] => {
       url: 'https://community.grafana.com/?utm_source=grafana_footer',
       target: '_blank',
     },
+  */
   ];
 };
 
 export let getVersionLinks = (): FooterLink[] => {
-  const { buildInfo, licenseInfo } = config;
+  const { buildInfo /*, licenseInfo*/ } = config;
   const links: FooterLink[] = [];
-  const stateInfo = licenseInfo.stateInfo ? ` (${licenseInfo.stateInfo})` : '';
+  //const stateInfo = licenseInfo.stateInfo ? ` (${licenseInfo.stateInfo})` : '';
 
-  links.push({ text: `${buildInfo.edition}${stateInfo}`, url: licenseInfo.licenseUrl });
+  //links.push({ text: `${buildInfo.edition}${stateInfo}`, url: licenseInfo.licenseUrl });
+  links.push({ text: 'RadGreen Central' });
   links.push({ text: `v${buildInfo.version} (${buildInfo.commit})` });
 
-  if (buildInfo.hasUpdate) {
+  /*if (buildInfo.hasUpdate) {
     links.push({
       text: `New version available!`,
       icon: 'download-alt',
       url: 'https://grafana.com/grafana/download?utm_source=grafana_footer',
       target: '_blank',
     });
-  }
+  }*/
 
   return links;
 };

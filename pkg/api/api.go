@@ -57,6 +57,10 @@ func (hs *HTTPServer) registerRoutes() {
 	r.Get("/admin/stats", reqGrafanaAdmin, hs.Index)
 	r.Get("/admin/ldap", reqGrafanaAdmin, hs.Index)
 
+	r.Get("/serial-numbers", reqSignedIn, hs.Index)
+	r.Get("/serial-numbers/claim", reqSignedIn, hs.Index)
+	r.Get("/devices", reqSignedIn, hs.Index)
+
 	r.Get("/styleguide", reqSignedIn, hs.Index)
 
 	r.Get("/plugins", reqSignedIn, hs.Index)

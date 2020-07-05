@@ -70,6 +70,23 @@ export interface StringFieldConfigSettings {
   rows?: number;
 }
 
+const replaceFieldVariables = (value: string, context: FieldOverrideContext) => {
+  return value.replace(/\&\&\((\w+)\)/g, (substr, fieldName) => {
+    if (context.field!.labels && context.field!.labels[fieldName]) return context.field!.labels[fieldName];
+    else {
+      for (let s = 0; s < context.data.length; s++) {
+        const series = context.data[s];
+        const _f = series.fields.find((val, ind, obj) => {
+          return val.name == fieldName;
+        });
+        if (_f) {
+          return _f.values.get(0);
+        }
+      }
+    }
+  });
+};
+
 export const stringOverrideProcessor = (
   value: any,
   context: FieldOverrideContext,
@@ -78,6 +95,8 @@ export const stringOverrideProcessor = (
   if (value === null || value === undefined) {
     return value;
   }
+  //RADGREEN - process field variables
+  value = replaceFieldVariables(value, context);
   if (settings && settings.expandTemplateVars && context.replaceVariables) {
     return context.replaceVariables(value, context.field!.state!.scopedVars);
   }

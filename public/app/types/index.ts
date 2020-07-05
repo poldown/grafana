@@ -1,4 +1,5 @@
 export * from './teams';
+export * from './devices';
 export * from './alerting';
 export * from './location';
 export * from './folders';

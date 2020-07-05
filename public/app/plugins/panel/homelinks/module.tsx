@@ -18,32 +18,7 @@ export class GrafanaLinksPanel extends PureComponent<Props> {
 
     return (
       <>
-        <div className={styles.list}>
-          <HomeLink
-            title="Documentation"
-            icon="book"
-            url="https://grafana.com/docs/grafana/latest?utm_source=grafana_homelinks"
-            target="_blank"
-          />
-          <HomeLink
-            title="Getting started"
-            icon="bolt"
-            url="https://grafana.com/docs/grafana/latest/guides/getting_started/?utm_source=grafana_homelinks"
-            target="_blank"
-          />
-          <HomeLink
-            title="Community forum"
-            icon="comments-alt"
-            url="https://community.grafana.com?utm_source=grafana_homelinks"
-            target="_blank"
-          />
-          <HomeLink
-            title="Report a bug"
-            icon="bug"
-            url="https://github.com/grafana/grafana/issues/new?template=1-bug_report.md"
-            target="_blank"
-          />
-        </div>
+        <div className={styles.list}></div>
         <VersionFooter />
       </>
     );

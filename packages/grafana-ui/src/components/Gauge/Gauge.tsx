@@ -161,7 +161,10 @@ export class Gauge extends PureComponent<Props> {
             width: thresholdMarkersWidth,
           },
           value: {
-            color: value.color,
+            color: getColorFromHexRgbOrName(
+              getActiveThreshold(value.numeric, field.thresholds ? field.thresholds.steps : []).color,
+              theme.type
+            ),
             formatter: () => {
               return text;
             },

@@ -16,6 +16,10 @@ export enum ThresholdsMode {
    *  between 0 and 1 (based on min/max)
    */
   Percentage = 'percentage',
+  /**
+   *  based on a field read from the data
+   */
+  FieldBased = 'field_based',
 }
 
 /**
@@ -28,4 +32,9 @@ export interface ThresholdsConfig {
    *  Must be sorted by 'value', first value is always -Infinity
    */
   steps: Threshold[];
+
+  /**
+   *  Field Name (when enabling field_based mode)
+   */
+  fieldName?: string;
 }

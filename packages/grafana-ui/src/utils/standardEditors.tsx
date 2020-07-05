@@ -143,6 +143,7 @@ export const getStandardFieldConfigs = () => {
         { value: -Infinity, color: 'green' },
         { value: 80, color: 'red' },
       ],
+      fieldName: '',
     },
     shouldApply: field => field.type === FieldType.number,
     category: ['Thresholds'],

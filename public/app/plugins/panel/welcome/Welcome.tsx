@@ -77,7 +77,7 @@ const getStyles = stylesFactory((theme: GrafanaTheme) => {
       }
     `,
     help: css`
-      display: flex;
+      display: none; //flex;
       align-items: baseline;
     `,
     helpText: css`

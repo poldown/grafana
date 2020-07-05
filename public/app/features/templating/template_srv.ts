@@ -33,6 +33,7 @@ export class TemplateSrv implements BaseTemplateSrv {
   private _variables: any[];
   private regex = variableRegex;
   private index: any = {};
+  private globalVariables: any = {};
   private grafanaVariables: any = {};
   private builtIns: any = {};
   private timeRange?: TimeRange | null = null;
@@ -81,6 +82,10 @@ export class TemplateSrv implements BaseTemplateSrv {
       }
       return acc;
     }, {});
+    this.index = {
+      ...this.index,
+      ...this.globalVariables,
+    };
 
     if (this.timeRange) {
       const from = this.timeRange.from.valueOf().toString();
@@ -248,6 +253,12 @@ export class TemplateSrv implements BaseTemplateSrv {
   setGlobalVariable(name: string, variable: any) {
     this.index = {
       ...this.index,
+      [name]: {
+        current: variable,
+      },
+    };
+    this.globalVariables = {
+      ...this.globalVariables,
       [name]: {
         current: variable,
       },

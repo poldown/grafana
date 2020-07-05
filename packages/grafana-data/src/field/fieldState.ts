@@ -90,6 +90,7 @@ function calculateFieldDisplayName(field: Field, frame?: DataFrame, allFrames?: 
     parts.push(field.name);
   }
 
+  /* RADGREEN - we don't want labels in our display names
   if (field.labels && frame) {
     let singleLabelName = getSingleLabelName(allFrames ?? [frame]);
 
@@ -103,7 +104,7 @@ function calculateFieldDisplayName(field: Field, frame?: DataFrame, allFrames?: 
       parts.push(field.labels[singleLabelName]);
       labelsAdded = true;
     }
-  }
+  }*/
 
   // if we have not added frame name and no labels, and field name = Value, we should add frame name
   if (frame && !frameNameAdded && !labelsAdded && field.name === TIME_SERIES_VALUE_FIELD_NAME) {
