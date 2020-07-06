@@ -128,7 +128,7 @@ function calculateFieldDisplayName(field: Field, frame?: DataFrame, allFrames?: 
 /**
  * Checks all data frames and return name of label if there is only one label name in all frames
  */
-function getSingleLabelName(frames: DataFrame[]): string | null {
+/*function getSingleLabelName(frames: DataFrame[]): string | null {
   let singleName: string | null = null;
 
   for (let i = 0; i < frames.length; i++) {
@@ -151,4 +151,4 @@ function getSingleLabelName(frames: DataFrame[]): string | null {
   }
 
   return singleName;
-}
+}*/

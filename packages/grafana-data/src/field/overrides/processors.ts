@@ -72,12 +72,13 @@ export interface StringFieldConfigSettings {
 
 const replaceFieldVariables = (value: string, context: FieldOverrideContext) => {
   return value.replace(/\&\&\((\w+)\)/g, (substr, fieldName) => {
-    if (context.field!.labels && context.field!.labels[fieldName]) return context.field!.labels[fieldName];
-    else {
+    if (context.field!.labels && context.field!.labels[fieldName]) {
+      return context.field!.labels[fieldName];
+    } else {
       for (let s = 0; s < context.data.length; s++) {
         const series = context.data[s];
         const _f = series.fields.find((val, ind, obj) => {
-          return val.name == fieldName;
+          return val.name === fieldName;
         });
         if (_f) {
           return _f.values.get(0);

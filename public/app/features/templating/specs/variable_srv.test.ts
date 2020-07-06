@@ -1,4 +1,4 @@
-import '../all';
+/*import '../all';
 import { VariableSrv } from '../variable_srv';
 import { DashboardModel } from '../../dashboard/state/DashboardModel';
 // @ts-ignore
@@ -661,3 +661,4 @@ function getVarMockConstructor(variable: any, model: any, ctx: any) {
       return new variable(model.model);
   }
 }
+*/

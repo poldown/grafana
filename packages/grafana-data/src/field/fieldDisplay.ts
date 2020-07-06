@@ -127,14 +127,15 @@ export const getFieldDisplayValues = (options: GetFieldDisplayValuesOptions): Fi
         const config = cloneDeep(field.config); // already set by the prepare task
 
         // RADGREEN - override threshold values with field (from config.thresholds.fieldName) value
-        if (config.thresholds && config.thresholds.mode == ThresholdsMode.FieldBased) {
+        if (config.thresholds && config.thresholds.mode === ThresholdsMode.FieldBased) {
           const fieldName = config.thresholds.fieldName;
           if (fieldName) {
             let stepsStr;
-            if (field.labels && field.labels[fieldName]) stepsStr = field.labels[fieldName];
-            else {
+            if (field.labels && field.labels[fieldName]) {
+              stepsStr = field.labels[fieldName];
+            } else {
               const _f = series.fields.find((val, ind, obj) => {
-                return val.name == fieldName;
+                return val.name === fieldName;
               });
               if (_f) {
                 stepsStr = _f.values.get(0);
