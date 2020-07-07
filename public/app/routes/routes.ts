@@ -310,10 +310,12 @@ export function setupAngularRoutes($routeProvider: route.IRouteProvider, $locati
       },
     })
     .when('/profile', {
-      templateUrl: 'public/app/features/profile/partials/profile.html',
-      controller: 'ProfileCtrl',
-      controllerAs: 'ctrl',
+      template: '<react-container />',
       reloadOnSearch: false,
+      resolve: {
+        component: () =>
+          SafeDynamicImport(import(/* webpackChunkName: "UserProfileEdit" */ 'app/features/profile/UserProfileEdit')),
+      },
     })
     .when('/profile/password', {
       template: '<react-container />',
@@ -321,7 +323,7 @@ export function setupAngularRoutes($routeProvider: route.IRouteProvider, $locati
       resolve: {
         component: () =>
           SafeDynamicImport(
-            import(/* webPackChunkName: "ChangePasswordPage" */ 'app/features/profile/ChangePasswordPage')
+            import(/* webpackChunkName: "ChangePasswordPage" */ 'app/features/profile/ChangePasswordPage')
           ),
       },
     })
@@ -330,7 +332,7 @@ export function setupAngularRoutes($routeProvider: route.IRouteProvider, $locati
       reloadOnSearch: false,
       resolve: {
         component: () =>
-          SafeDynamicImport(import(/* webPackChunkName: "SelectOrgPage" */ 'app/features/org/SelectOrgPage')),
+          SafeDynamicImport(import(/* webpackChunkName: "SelectOrgPage" */ 'app/features/org/SelectOrgPage')),
       },
     })
     // ADMIN
@@ -435,11 +437,11 @@ export function setupAngularRoutes($routeProvider: route.IRouteProvider, $locati
     // LOGIN / SIGNUP
     .when('/login', {
       template: '<react-container/>',
+      //@ts-ignore
+      pageClass: 'login-page sidemenu-hidden',
       resolve: {
         component: () => LoginPage,
       },
-      //@ts-ignore
-      pageClass: 'login-page sidemenu-hidden',
     })
     .when('/invite/:code', {
       template: '<react-container/>',
@@ -452,21 +454,35 @@ export function setupAngularRoutes($routeProvider: route.IRouteProvider, $locati
     })
     .when('/signup', {
       template: '<react-container/>',
+      //@ts-ignore
+      pageClass: 'sidemenu-hidden',
       resolve: {
         component: () => SignupPage,
       },
-      //@ts-ignore
-      pageClass: 'sidemenu-hidden',
     })
     .when('/user/password/send-reset-email', {
-      templateUrl: 'public/app/partials/reset_password.html',
-      controller: 'ResetPasswordCtrl',
-      //@ts-ignore
+      template: '<react-container />',
+      resolve: {
+        component: () =>
+          SafeDynamicImport(
+            import(
+              /* webpackChunkName: "SendResetMailPage" */ 'app/core/components/ForgottenPassword/SendResetMailPage'
+            )
+          ),
+      },
+      // @ts-ignore
       pageClass: 'sidemenu-hidden',
     })
     .when('/user/password/reset', {
-      templateUrl: 'public/app/partials/reset_password.html',
-      controller: 'ResetPasswordCtrl',
+      template: '<react-container />',
+      resolve: {
+        component: () =>
+          SafeDynamicImport(
+            import(
+              /* webpackChunkName: "ChangePasswordPage" */ 'app/core/components/ForgottenPassword/ChangePasswordPage'
+            )
+          ),
+      },
       //@ts-ignore
       pageClass: 'sidemenu-hidden',
     })
@@ -529,6 +545,15 @@ export function setupAngularRoutes($routeProvider: route.IRouteProvider, $locati
       controllerAs: 'ctrl',
       reloadOnSearch: false,
     })
+    .when('/alerting/notification/new2', {
+      template: '<react-container />',
+      resolve: {
+        component: () =>
+          SafeDynamicImport(
+            import(/* webpackChunkName: "NewNotificationChannel" */ 'app/features/alerting/NewAlertNotificationPage')
+          ),
+      },
+    })
     .when('/alerting/notification/:id/edit', {
       templateUrl: 'public/app/features/alerting/partials/notification_edit.html',
       controller: 'AlertNotificationEditCtrl',
@@ -536,9 +561,11 @@ export function setupAngularRoutes($routeProvider: route.IRouteProvider, $locati
       reloadOnSearch: false,
     })
     .otherwise({
-      templateUrl: 'public/app/partials/error.html',
-      controller: 'ErrorCtrl',
-      reloadOnSearch: false,
+      template: '<react-container />',
+      resolve: {
+        component: () =>
+          SafeDynamicImport(import(/* webpackChunkName: "ErrorPage" */ 'app/core/components/ErrorPage/ErrorPage')),
+      },
     });
 
   applyRouteRegistrationHandlers($routeProvider);

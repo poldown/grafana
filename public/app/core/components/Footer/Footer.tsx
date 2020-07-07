@@ -41,6 +41,11 @@ export let getVersionLinks = (): FooterLink[] => {
 
   //links.push({ text: `${buildInfo.edition}${stateInfo}`, url: licenseInfo.licenseUrl });
   links.push({ text: 'RadGreen Central' });
+
+  if (buildInfo.hideVersion) {
+    return links;
+  }
+
   links.push({ text: `v${buildInfo.version} (${buildInfo.commit})` });
 
   /*if (buildInfo.hasUpdate) {
