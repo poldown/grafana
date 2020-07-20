@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/grafana/grafana/pkg/components/securejsondata"
 	"github.com/grafana/grafana/pkg/infra/log"
 	"github.com/grafana/grafana/pkg/models"
 	"github.com/grafana/grafana/pkg/services/alerting"
@@ -140,7 +141,6 @@ func validateRequiredField(notifications []*notificationsAsConfig) error {
 }
 
 func validateNotifications(notifications []*notificationsAsConfig) error {
-
 	for i := range notifications {
 		if notifications[i].Notifications == nil {
 			continue
@@ -148,9 +148,10 @@ func validateNotifications(notifications []*notificationsAsConfig) error {
 
 		for _, notification := range notifications[i].Notifications {
 			_, err := alerting.InitNotifier(&models.AlertNotification{
-				Name:     notification.Name,
-				Settings: notification.SettingsToJSON(),
-				Type:     notification.Type,
+				Name:           notification.Name,
+				Settings:       notification.SettingsToJSON(),
+				SecureSettings: securejsondata.GetEncryptedJsonData(notification.SecureSettings),
+				Type:           notification.Type,
 			})
 
 			if err != nil {
