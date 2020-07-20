@@ -174,6 +174,14 @@ func (hs *HTTPServer) registerRoutes() {
 			teamsRoute.Get("/search", Wrap(hs.SearchTeams))
 		})
 
+		// team without requirement of user to be org admin
+		apiRoute.Group("/devices", func(devicesRoute routing.RouteRegister) {
+			devicesRoute.Get("/:deviceId", Wrap(GetDeviceByID))
+			devicesRoute.Get("/:deviceId/last-reading", Wrap(GetDeviceLastReading))
+			devicesRoute.Get("/serial-number/:serialNumber", Wrap(GetDeviceBySN))
+			devicesRoute.Get("/search", Wrap(hs.SearchDevices))
+		})
+
 		// org information available to all users.
 		apiRoute.Group("/org", func(orgRoute routing.RouteRegister) {
 			orgRoute.Get("/", Wrap(GetOrgCurrent))

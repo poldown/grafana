@@ -1,54 +1,34 @@
-import { Team, TeamPermissionLevel } from 'app/types';
-import config from 'app/core/config';
+import { Device } from 'app/types';
 import { NavModelItem, NavModel } from '@grafana/data';
 
-export function buildNavModel(team: Team): NavModelItem {
+export function buildNavModel(device: Device): NavModelItem {
   const navModel = {
-    img: team.avatarUrl,
-    id: 'team-' + team.id,
-    subTitle: 'Manage members & settings',
+    icon: 'device',
+    id: 'device-' + device.id,
+    subTitle: 'Manage devices',
     url: '',
-    text: team.name,
-    breadcrumbs: [{ title: 'Teams', url: 'org/teams' }],
+    text: device.name,
+    breadcrumbs: [{ title: 'Devices', url: 'org/devices' }],
     children: [
       {
         active: false,
-        icon: 'users-alt',
-        id: `team-members-${team.id}`,
-        text: 'Members',
-        url: `org/teams/edit/${team.id}/members`,
-      },
-      {
-        active: false,
         icon: 'sliders-v-alt',
-        id: `team-settings-${team.id}`,
-        text: 'Settings',
-        url: `org/teams/edit/${team.id}/settings`,
+        id: `device-settings-${device.id}`,
+        text: 'Device Settings',
+        url: `org/devices/edit/${device.id}/settings`,
       },
     ],
   };
 
-  if (config.licenseInfo.hasLicense) {
-    navModel.children.push({
-      active: false,
-      icon: 'sync',
-      id: `team-groupsync-${team.id}`,
-      text: 'External group sync',
-      url: `org/teams/edit/${team.id}/groupsync`,
-    });
-  }
-
   return navModel;
 }
 
-export function getTeamLoadingNav(pageName: string): NavModel {
+export function getDeviceLoadingNav(pageName: string): NavModel {
   const main = buildNavModel({
-    avatarUrl: 'public/img/user_profile.png',
     id: 1,
+    orgId: 1,
     name: 'Loading',
-    email: 'loading',
-    memberCount: 0,
-    permission: TeamPermissionLevel.Member,
+    serialNumber: '000000',
   });
 
   let node: NavModelItem;
