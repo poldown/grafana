@@ -216,6 +216,12 @@ var (
 
 	ImageUploadProvider string
 	FeatureToggles      map[string]bool
+
+	// RADGREEN
+	RadGreenDataSourceOrgId  int64
+	RadGreenDataSourceId     int64
+	RadGreenBucketName       string
+	RadGreenOrganizationName string
 )
 
 // TODO move all global vars to this struct
@@ -996,6 +1002,19 @@ func (cfg *Cfg) Load(args *CommandLineArgs) error {
 	AlertingNotificationTimeout = time.Second * time.Duration(notificationTimeoutSeconds)
 	AlertingMaxAttempts = alerting.Key("max_attempts").MustInt(3)
 	AlertingMinInterval = alerting.Key("min_interval_seconds").MustInt64(1)
+
+	// RADGREEN
+	radgreen := iniFile.Section("radgreen")
+	RadGreenDataSourceOrgId = radgreen.Key("api_datasource_org_id").MustInt64(1)
+	RadGreenDataSourceId = radgreen.Key("api_datasource_id").MustInt64(1)
+	RadGreenOrganizationName, err = valueAsString(radgreen, "api_organization", "")
+	if err != nil {
+		return err
+	}
+	RadGreenBucketName, err = valueAsString(radgreen, "api_bucket", "")
+	if err != nil {
+		return err
+	}
 
 	explore := iniFile.Section("explore")
 	ExploreEnabled = explore.Key("enabled").MustBool(true)

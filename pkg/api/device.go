@@ -1,8 +1,13 @@
 package api
 
 import (
+	"fmt"
+
+	"github.com/grafana/grafana/pkg/api/dtos"
 	"github.com/grafana/grafana/pkg/bus"
+	"github.com/grafana/grafana/pkg/components/simplejson"
 	"github.com/grafana/grafana/pkg/models"
+	"github.com/grafana/grafana/pkg/setting"
 )
 
 // GET /api/devices/:deviceId
@@ -35,19 +40,34 @@ func GetDeviceBySN(c *models.ReqContext) Response {
 	return JSON(200, &query.Result)
 }
 
-// GET /api/datasources/name/:name/devices/last-reading/:deviceId
-func GetDeviceLastReading(c *models.ReqContext) Response {
-	query := models.GetDeviceLastReadingQuery{OrgId: c.OrgId, Id: c.ParamsInt64(":deviceId")}
+// GET /api/devices/:deviceId/last-reading
+func (hs *HTTPServer) GetDeviceLastReading(c *models.ReqContext) Response {
+	datasourceOrgId := setting.RadGreenDataSourceOrgId
+	datasourceId := setting.RadGreenDataSourceId
+	bucket := setting.RadGreenBucketName
+	organization := setting.RadGreenOrganizationName
 
-	if err := bus.Dispatch(&query); err != nil {
-		if err == models.ErrDeviceNotFound {
-			return Error(404, "Device not found", err)
-		}
+	deviceId := c.ParamsInt64(":deviceId")
 
-		return Error(500, "Failed to get Device", err)
-	}
+	js, _ := simplejson.NewJson([]byte(fmt.Sprintf(`{
+			"datasourceId": %d,
+			"intervalMs": 20000,
+			"orgId": %d,
+			"options": { 
+				"defaultBucket": "%s", 
+				"organization": "%s"
+			},
+			"query": "from(bucket: \"%s\") |> range(start: -1h) |> filter(fn: (r) => r[\"_field\"] == \"value\" and r[\"device_id\"] == \"%d\") |> last()"
+	}`, datasourceId, datasourceOrgId, bucket, organization, bucket, deviceId)))
 
-	return JSON(200, &query.Result)
+	queries := []*simplejson.Json{js}
+
+	return hs.QueryMetricsV2(c, dtos.MetricRequest{
+		From:    "0",
+		To:      "0",
+		Queries: queries,
+		Debug:   false,
+	})
 }
 
 // GET /api/devices/search

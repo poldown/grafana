@@ -1,5 +1,5 @@
 import { Device } from 'app/types';
-import { NavModelItem, NavModel } from '@grafana/data';
+import { NavModelItem } from '@grafana/data';
 
 export function buildNavModel(device: Device): NavModelItem {
   const navModel = {
@@ -23,7 +23,7 @@ export function buildNavModel(device: Device): NavModelItem {
   return navModel;
 }
 
-export function getDeviceLoadingNav(pageName: string): NavModel {
+/*export function getDeviceLoadingNav(pageName: string): NavModel {
   const main = buildNavModel({
     id: 1,
     orgId: 1,
@@ -35,7 +35,7 @@ export function getDeviceLoadingNav(pageName: string): NavModel {
 
   // find active page
   for (const child of main.children) {
-    if (child.id.indexOf(pageName) > 0) {
+    if (child.id && child.id.indexOf(pageName) > 0) {
       child.active = true;
       node = child;
       break;
@@ -46,4 +46,4 @@ export function getDeviceLoadingNav(pageName: string): NavModel {
     main: main,
     node: node,
   };
-}
+}*/

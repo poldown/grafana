@@ -10909,10 +10909,10 @@ d@1, d@^1.0.1:
     es5-ext "^0.10.50"
     type "^1.0.1"
 
-dangerously-set-html-content@1.0.6:
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/dangerously-set-html-content/-/dangerously-set-html-content-1.0.6.tgz#3f4017215f821ba3ff46fa9d745036b708d4378c"
-  integrity sha512-rZ9cjrVHpFLCzm/rF2ZTGIg24DfQ+E3DBtQ0+OacIVndNewl7+SZvn4n403il4xirZQwpwUJudn/USK8qm4fuQ==
+dangerously-set-html-content@^1.0.7:
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/dangerously-set-html-content/-/dangerously-set-html-content-1.0.7.tgz#0f8c5b41cf800e1d7bbd1f526b76b5bbc6014ee1"
+  integrity sha512-EyQZfn1k70z9Lm1X+T4uc1fha0ixk9OZZLHuwpbgfJPDEQprOzV5+mg2mTngmuE8IqhjBacZTCQ+D07/rf3MJA==
 
 dargs@^4.0.1:
   version "4.1.0"

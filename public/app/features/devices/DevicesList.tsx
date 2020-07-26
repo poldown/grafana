@@ -22,7 +22,7 @@ export interface Props {
   loadDevices: typeof loadDevices;
   deleteDevice: typeof deleteDevice;
   setSearchQuery: typeof setSearchQuery;
-  signedInUser?: User;
+  signedInUser: User;
 }
 
 export class DevicesList extends PureComponent<Props, any> {

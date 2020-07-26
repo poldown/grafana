@@ -74,13 +74,6 @@ type GetDeviceBySNQuery struct {
 	Result       *DeviceDTO
 }
 
-type GetDeviceLastReadingQuery struct {
-	OrgId  int64
-	Id     int64
-	DsName string
-	Result *DeviceDTO
-}
-
 type GetDevicesByOrgIdQuery struct {
 	OrgId  int64
 	Result []*DeviceDTO `json:"devices"`
