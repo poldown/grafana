@@ -173,10 +173,12 @@ func (hs *HTTPServer) registerRoutes() {
 			teamsRoute.Get("/search", Wrap(hs.SearchTeams))
 		})
 
-		// team without requirement of user to be org admin
+		// device without requirement of user to be org admin
 		apiRoute.Group("/devices", func(devicesRoute routing.RouteRegister) {
 			devicesRoute.Get("/:deviceId", Wrap(GetDeviceByID))
 			devicesRoute.Get("/:deviceId/last-reading", Wrap(hs.GetDeviceLastReading))
+			devicesRoute.Get("/:deviceId/sensors/:sensorType", Wrap(hs.GetDeviceSensorData))
+			devicesRoute.Get("/:deviceId/sensors/:sensorType/threshold", Wrap(GetDeviceSensorThreshold))
 			devicesRoute.Get("/serial-number/:serialNumber", Wrap(GetDeviceBySN))
 			devicesRoute.Get("/search", Wrap(hs.SearchDevices))
 		})

@@ -57,8 +57,51 @@ func (hs *HTTPServer) GetDeviceLastReading(c *models.ReqContext) Response {
 				"defaultBucket": "%s", 
 				"organization": "%s"
 			},
-			"query": "from(bucket: \"%s\") |> range(start: -1h) |> filter(fn: (r) => r[\"_field\"] == \"value\" and r[\"device_id\"] == \"%d\") |> last()"
+			"query": "from(bucket: \"%s\") |> range(start: -1h) |> filter(fn: (r) => r._field == \"value\" and r.device_id == \"%d\") |> last()"
 	}`, datasourceId, datasourceOrgId, bucket, organization, bucket, deviceId)))
+
+	queries := []*simplejson.Json{js}
+
+	return hs.QueryMetricsV2(c, dtos.MetricRequest{
+		From:    "0",
+		To:      "0",
+		Queries: queries,
+		Debug:   false,
+	})
+}
+
+// GET /api/devices/:deviceId/sensor/:sensorType
+func (hs *HTTPServer) GetDeviceSensorData(c *models.ReqContext) Response {
+	datasourceOrgId := setting.RadGreenDataSourceOrgId
+	datasourceId := setting.RadGreenDataSourceId
+	bucket := setting.RadGreenBucketName + c.Query("bucket_suffix")
+	start := "-" + c.Query("duration")
+	every := c.Query("every")
+	organization := setting.RadGreenOrganizationName
+
+	field := c.Query("series")
+	if field != "min" && field != "max" {
+		field = "value"
+	}
+
+	deviceId := c.ParamsInt64(":deviceId")
+	sensorType := c.Params(":sensorType")
+
+	aggregateQ := ""
+	if every != "" {
+		aggregateQ = fmt.Sprintf(` |> aggregateWindow(every: %s, fn: mean)`, every)
+	}
+
+	js, _ := simplejson.NewJson([]byte(fmt.Sprintf(`{
+			"datasourceId": %d,
+			"intervalMs": 20000,
+			"orgId": %d,
+			"options": { 
+				"defaultBucket": "%s", 
+				"organization": "%s"
+			},
+			"query": "from(bucket: \"%s\") |> range(start: %s) |> filter(fn: (r) => r._field == \"%s\" and r.device_id == \"%d\" and r._measurement == \"%s\")%s"
+	}`, datasourceId, datasourceOrgId, bucket, organization, bucket, start, field, deviceId, sensorType, aggregateQ)))
 
 	queries := []*simplejson.Json{js}
 
@@ -103,4 +146,19 @@ func (hs *HTTPServer) SearchDevices(c *models.ReqContext) Response {
 	query.Result.PerPage = perPage
 
 	return JSON(200, query.Result)
+}
+
+// GET /api/devices/:deviceId/sensors/:sensorType/threshold
+func GetDeviceSensorThreshold(c *models.ReqContext) Response {
+	query := models.GetDeviceSensorThresholdQuery{OrgId: c.OrgId, DeviceId: c.ParamsInt64(":deviceId"), SensorType: c.Params(":sensorType")}
+
+	if err := bus.Dispatch(&query); err != nil {
+		if err == models.ErrDeviceNotFound {
+			return Error(404, "Threshold not found", err)
+		}
+
+		return Error(500, "Failed to get Threshold", err)
+	}
+
+	return JSON(200, &query.Result)
 }

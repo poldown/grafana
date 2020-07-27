@@ -13,6 +13,8 @@ var (
 	ErrDeviceNameTaken                        = errors.New("Device name is taken")
 	ErrNotAllowedToUpdateDevice               = errors.New("User not allowed to update device")
 	ErrNotAllowedToUpdateDeviceInDifferentOrg = errors.New("User not allowed to update device in another org")
+
+	ErrThresholdNotFound = errors.New("Threshold not found")
 )
 
 // Device model
@@ -90,6 +92,13 @@ type SearchDevicesQuery struct {
 	Result SearchDeviceQueryResult
 }
 
+type GetDeviceSensorThresholdQuery struct {
+	OrgId      int64
+	DeviceId   int64
+	SensorType string
+	Result     *ThresholdDTO
+}
+
 type DeviceDTO struct {
 	Id           int64     `json:"id"`
 	OrgId        int64     `json:"orgId"`
@@ -105,4 +114,13 @@ type SearchDeviceQueryResult struct {
 	Devices    []*DeviceDTO `json:"devices"`
 	Page       int          `json:"page"`
 	PerPage    int          `json:"perPage"`
+}
+
+type ThresholdDTO struct {
+	Id         int64  `json:"id"`
+	OrgId      int64  `json:"orgId"`
+	DeviceId   int64  `json:"deviceId"`
+	SensorType string `json:"sensorType"`
+	Type       int8   `json:"type"`
+	Data       string `json:"data"`
 }

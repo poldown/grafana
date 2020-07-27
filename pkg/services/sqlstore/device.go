@@ -15,6 +15,8 @@ func init() {
 	bus.AddHandler("sql", SearchDevices)
 	bus.AddHandler("sql", GetDeviceById)
 	bus.AddHandler("sql", GetDevicesByOrgId)
+	bus.AddHandler("sql", GetDeviceBySN)
+	bus.AddHandler("sql", GetDeviceSensorThreshold)
 }
 
 func getDeviceSelectSqlBase() string {
@@ -236,5 +238,41 @@ func GetDeviceBySN(query *models.GetDeviceBySNQuery) error {
 	}
 
 	query.Result = &device
+	return nil
+}
+
+func GetDeviceSensorThreshold(query *models.GetDeviceSensorThresholdQuery) error {
+	var sql bytes.Buffer
+
+	sql.WriteString(`(SELECT t1.id as id,
+						t1.org_id as org_id, 
+						t1.device_id as device_id,
+						t1._measurement as _measurement,
+						t1.type as type,
+						t1.data as data
+						FROM threshold as t1
+						WHERE t1.device_id = ? AND t1._measurement = ? and t1.is_default = 0
+					) UNION (SELECT t2.id as id,
+						? as org_id,
+						? as device_id,
+						t2._measurement as _measurement,
+						t2.type,
+						t2.data
+						FROM threshold as t2
+						WHERE t2._measurement=? and t2.is_default = 1
+					) LIMIT 1`)
+
+	var threshold models.ThresholdDTO
+	exists, err := x.SQL(sql.String(), query.DeviceId, query.SensorType, query.OrgId, query.DeviceId, query.SensorType).Get(&threshold)
+
+	if err != nil {
+		return err
+	}
+
+	if !exists {
+		return models.ErrThresholdNotFound
+	}
+
+	query.Result = &threshold
 	return nil
 }
