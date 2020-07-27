@@ -70,7 +70,7 @@ func (hs *HTTPServer) GetDeviceLastReading(c *models.ReqContext) Response {
 	})
 }
 
-// GET /api/devices/:deviceId/sensor/:sensorType
+// GET /api/devices/:deviceId/sensors/:sensorType
 func (hs *HTTPServer) GetDeviceSensorData(c *models.ReqContext) Response {
 	datasourceOrgId := setting.RadGreenDataSourceOrgId
 	datasourceId := setting.RadGreenDataSourceId

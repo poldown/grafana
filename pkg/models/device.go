@@ -4,6 +4,7 @@ import (
 	"errors"
 	"time"
 
+	"github.com/grafana/grafana/pkg/components/simplejson"
 	geo "github.com/kellydunn/golang-geo"
 )
 
@@ -117,10 +118,10 @@ type SearchDeviceQueryResult struct {
 }
 
 type ThresholdDTO struct {
-	Id         int64  `json:"id"`
-	OrgId      int64  `json:"orgId"`
-	DeviceId   int64  `json:"deviceId"`
-	SensorType string `json:"sensorType"`
-	Type       int8   `json:"type"`
-	Data       string `json:"data"`
+	Id         int64            `json:"id"`
+	OrgId      int64            `json:"orgId"`
+	DeviceId   int64            `json:"deviceId"`
+	SensorType string           `json:"sensorType"`
+	Type       int8             `json:"type"`
+	Data       *simplejson.Json `json:"data"`
 }

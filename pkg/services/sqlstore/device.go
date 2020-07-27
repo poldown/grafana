@@ -247,7 +247,7 @@ func GetDeviceSensorThreshold(query *models.GetDeviceSensorThresholdQuery) error
 	sql.WriteString(`(SELECT t1.id as id,
 						t1.org_id as org_id, 
 						t1.device_id as device_id,
-						t1._measurement as _measurement,
+						t1._measurement as sensor_type,
 						t1.type as type,
 						t1.data as data
 						FROM threshold as t1
@@ -255,7 +255,7 @@ func GetDeviceSensorThreshold(query *models.GetDeviceSensorThresholdQuery) error
 					) UNION (SELECT t2.id as id,
 						? as org_id,
 						? as device_id,
-						t2._measurement as _measurement,
+						t2._measurement as sensor_type,
 						t2.type,
 						t2.data
 						FROM threshold as t2
