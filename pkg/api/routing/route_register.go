@@ -30,6 +30,9 @@ type RouteRegister interface {
 	// Patch adds a list of handlers to a given route with a PATCH HTTP verb
 	Patch(string, ...macaron.Handler)
 
+	// Patch adds a list of handlers to a given route with a PATCH HTTP verb
+	Options(string, ...macaron.Handler)
+
 	// Any adds a list of handlers to a given route with any HTTP verb
 	Any(string, ...macaron.Handler)
 
