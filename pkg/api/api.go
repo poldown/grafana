@@ -179,7 +179,8 @@ func (hs *HTTPServer) registerRoutes() {
 			devicesRoute.Get("/:deviceId/last-reading", Wrap(hs.GetDeviceLastReading))
 			devicesRoute.Get("/:deviceId/sensors/:sensorType", Wrap(hs.GetDeviceSensorData))
 			devicesRoute.Get("/:deviceId/sensors/:sensorType/threshold", Wrap(GetDeviceSensorThreshold))
-			devicesRoute.Get("/serial-number/:serialNumber", Wrap(GetDeviceBySN))
+			devicesRoute.Get("/serial-number/:serialNumber/code/:code", Wrap(GetDeviceBySN))
+			devicesRoute.Options("/serial-number/:serialNumber/code/:code", Wrap(GetDeviceBySNOptions))
 			devicesRoute.Get("/search", Wrap(hs.SearchDevices))
 		})
 

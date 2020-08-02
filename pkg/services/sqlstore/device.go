@@ -224,10 +224,10 @@ func GetDeviceBySN(query *models.GetDeviceBySNQuery) error {
 	var sql bytes.Buffer
 
 	sql.WriteString(getDeviceSelectSqlBase())
-	sql.WriteString(` WHERE device.org_id = ? and device.serial_number = ?`)
+	sql.WriteString(`INNER JOIN serial_numbers_inventory as sni ON device.serial_number = sni.serial_number WHERE device.org_id = ? and device.serial_number = ? and sni.code = ?`)
 
 	var device models.DeviceDTO
-	exists, err := x.SQL(sql.String(), query.OrgId, query.SerialNumber).Get(&device)
+	exists, err := x.SQL(sql.String(), query.OrgId, query.SerialNumber, query.Code).Get(&device)
 
 	if err != nil {
 		return err

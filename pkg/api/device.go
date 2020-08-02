@@ -27,7 +27,7 @@ func GetDeviceByID(c *models.ReqContext) Response {
 
 // GET /api/devices/serial-number/:serialNumber
 func GetDeviceBySN(c *models.ReqContext) Response {
-	query := models.GetDeviceBySNQuery{OrgId: c.OrgId, SerialNumber: c.Params(":serialNumber")}
+	query := models.GetDeviceBySNQuery{OrgId: c.OrgId, SerialNumber: c.Params(":serialNumber"), Code: c.ParamsInt(":code")}
 
 	if err := bus.Dispatch(&query); err != nil {
 		if err == models.ErrDeviceNotFound {
@@ -38,6 +38,11 @@ func GetDeviceBySN(c *models.ReqContext) Response {
 	}
 
 	return JSON(200, &query.Result)
+}
+
+// OPTIONS /api/devices/serial-number/:serialNumber
+func GetDeviceBySNOptions(c *models.ReqContext) Response {
+	return JSON(200, nil)
 }
 
 // GET /api/devices/:deviceId/last-reading

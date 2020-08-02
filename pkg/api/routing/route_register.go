@@ -158,6 +158,10 @@ func (rr *routeRegister) Patch(pattern string, handlers ...macaron.Handler) {
 	rr.route(pattern, http.MethodPatch, handlers...)
 }
 
+func (rr *routeRegister) Options(pattern string, handlers ...macaron.Handler) {
+	rr.route(pattern, http.MethodOptions, handlers...)
+}
+
 func (rr *routeRegister) Any(pattern string, handlers ...macaron.Handler) {
 	rr.route(pattern, "*", handlers...)
 }

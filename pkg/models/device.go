@@ -74,6 +74,7 @@ type GetDeviceByIdQuery struct {
 type GetDeviceBySNQuery struct {
 	OrgId        int64
 	SerialNumber string
+	Code         int
 	Result       *DeviceDTO
 }
 

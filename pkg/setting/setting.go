@@ -222,6 +222,7 @@ var (
 	RadGreenDataSourceId     int64
 	RadGreenBucketName       string
 	RadGreenOrganizationName string
+	AllowOriginHeader        string
 )
 
 // TODO move all global vars to this struct
@@ -1012,6 +1013,11 @@ func (cfg *Cfg) Load(args *CommandLineArgs) error {
 		return err
 	}
 	RadGreenBucketName, err = valueAsString(radgreen, "api_bucket", "")
+	if err != nil {
+		return err
+	}
+
+	AllowOriginHeader, err = valueAsString(radgreen, "api_allow_origin_header", "")
 	if err != nil {
 		return err
 	}
