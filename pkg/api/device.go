@@ -40,11 +40,6 @@ func GetDeviceBySN(c *models.ReqContext) Response {
 	return JSON(200, &query.Result)
 }
 
-// OPTIONS /api/devices/serial-number/:serialNumber
-func GetDeviceBySNOptions(c *models.ReqContext) Response {
-	return JSON(200, nil)
-}
-
 // GET /api/devices/:deviceId/last-reading
 func (hs *HTTPServer) GetDeviceLastReading(c *models.ReqContext) Response {
 	datasourceOrgId := setting.RadGreenDataSourceOrgId

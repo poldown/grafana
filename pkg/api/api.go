@@ -26,6 +26,7 @@ func (hs *HTTPServer) registerRoutes() {
 
 	// not logged in views
 	r.Get("/logout", hs.Logout)
+	r.Options("/login", Wrap(hs.LoginOptions))
 	r.Post("/login", quota("session"), bind(dtos.LoginCommand{}), Wrap(hs.LoginPost))
 	r.Get("/login/:name", quota("session"), hs.OAuthLogin)
 	r.Get("/login", hs.LoginView)
@@ -180,7 +181,6 @@ func (hs *HTTPServer) registerRoutes() {
 			devicesRoute.Get("/:deviceId/sensors/:sensorType", Wrap(hs.GetDeviceSensorData))
 			devicesRoute.Get("/:deviceId/sensors/:sensorType/threshold", Wrap(GetDeviceSensorThreshold))
 			devicesRoute.Get("/serial-number/:serialNumber/code/:code", Wrap(GetDeviceBySN))
-			devicesRoute.Options("/serial-number/:serialNumber/code/:code", Wrap(GetDeviceBySNOptions))
 			devicesRoute.Get("/search", Wrap(hs.SearchDevices))
 		})
 
