@@ -158,11 +158,6 @@ func (hs *HTTPServer) LoginAPIPing(c *models.ReqContext) Response {
 	return Error(401, "Unauthorized", nil)
 }
 
-// OPTIONS /login
-func (hs *HTTPServer) LoginOptions(c *models.ReqContext) Response {
-	return JSON(200, nil)
-}
-
 func (hs *HTTPServer) LoginPost(c *models.ReqContext, cmd dtos.LoginCommand) Response {
 	if setting.DisableLoginForm {
 		return Error(401, "Login is disabled", nil)

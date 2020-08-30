@@ -26,11 +26,12 @@ func (hs *HTTPServer) registerRoutes() {
 
 	// not logged in views
 	r.Get("/logout", hs.Logout)
-	r.Options("/login", Wrap(hs.LoginOptions))
 	r.Post("/login", quota("session"), bind(dtos.LoginCommand{}), Wrap(hs.LoginPost))
 	r.Get("/login/:name", quota("session"), hs.OAuthLogin)
 	r.Get("/login", hs.LoginView)
 	r.Get("/invite/:code", hs.Index)
+	// RADGREEN - for a successful CORS preflight
+	r.Options("/api/*", Wrap(hs.GetApiOptions))
 
 	// authed views
 	r.Get("/profile/", reqSignedIn, hs.Index)
@@ -452,4 +453,9 @@ func (hs *HTTPServer) registerRoutes() {
 	r.Delete("/api/snapshots/:key", reqEditorRole, Wrap(DeleteDashboardSnapshot))
 
 	r.Get("/*", reqSignedIn, hs.Index)
+}
+
+// OPTIONS /*
+func (hs *HTTPServer) GetApiOptions(c *models.ReqContext) Response {
+	return JSON(200, nil)
 }

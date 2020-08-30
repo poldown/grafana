@@ -75,7 +75,7 @@ func Empty(status int) *NormalResponse {
 
 // JSON create a JSON response
 func JSON(status int, body interface{}) *NormalResponse {
-	return Respond(status, body).Header("Content-Type", "application/json").Header("Access-Control-Allow-Origin", setting.AllowOriginHeader).Header("Access-Control-Allow-Methods", "GET, OPTIONS").Header("Access-Control-Allow-Headers", "origin, authorization, accept")
+	return Respond(status, body).Header("Content-Type", "application/json").Header("Access-Control-Allow-Origin", setting.AllowOriginHeader).Header("Access-Control-Allow-Methods", setting.AllowMethodsHeader).Header("Access-Control-Allow-Headers", setting.AllowHeadersHeader).Header("Access-Control-Allow-Credentials", "true")
 }
 
 // Success create a successful response

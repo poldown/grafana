@@ -25,7 +25,7 @@ func GetDeviceByID(c *models.ReqContext) Response {
 	return JSON(200, &query.Result)
 }
 
-// GET /api/devices/serial-number/:serialNumber
+// GET /api/devices/serial-number/:serialNumber/code/:code
 func GetDeviceBySN(c *models.ReqContext) Response {
 	query := models.GetDeviceBySNQuery{OrgId: c.OrgId, SerialNumber: c.Params(":serialNumber"), Code: c.ParamsInt(":code")}
 
