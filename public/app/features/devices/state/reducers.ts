@@ -23,8 +23,6 @@ export const devicesReducer = devicesSlice.reducer;
 
 export const initialDeviceState: DeviceState = {
   device: {} as Device,
-  searchQuery: '',
-  hasFetched: false,
 };
 
 const deviceSlice = createSlice({
@@ -32,15 +30,12 @@ const deviceSlice = createSlice({
   initialState: initialDeviceState,
   reducers: {
     deviceLoaded: (state, action: PayloadAction<Device>): DeviceState => {
-      return { ...state, hasFetched: true, device: action.payload };
-    },
-    setDeviceSearchQuery: (state, action: PayloadAction<string>): DeviceState => {
-      return { ...state, searchQuery: action.payload };
+      return { ...state, device: action.payload };
     },
   },
 });
 
-export const { deviceLoaded, setDeviceSearchQuery } = deviceSlice.actions;
+export const { deviceLoaded } = deviceSlice.actions;
 
 export const deviceReducer = deviceSlice.reducer;
 

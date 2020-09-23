@@ -32,6 +32,7 @@ const (
 	// any items with default weight.
 
 	WeightCreate = (iota - 20) * 100
+	WeightDevice
 	WeightDashboard
 	WeightExplore
 	WeightProfile

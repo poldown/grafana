@@ -8,7 +8,6 @@ import { StoreState, Device } from 'app/types';
 import { deleteDevice, loadDevices } from './state/actions';
 import { getSearchQuery, getDevices, getDevicesCount } from './state/selectors';
 import { getNavModel } from 'app/core/selectors/navModel';
-import { FilterInput } from 'app/core/components/FilterInput/FilterInput';
 import { contextSrv, User } from 'app/core/services/context_srv';
 import { connectWithCleanUp } from '../../core/components/connectWithCleanUp';
 import { setSearchQuery } from './state/reducers';
@@ -77,21 +76,13 @@ export class DevicesList extends PureComponent<Props, any> {
   }
 
   renderDevicesList() {
-    const { devices, searchQuery } = this.props;
+    const { devices } = this.props;
     const newDeviceHref = 'org/devices/new';
 
     return (
       <>
         <div className="page-action-bar">
-          <div className="gf-form gf-form--grow">
-            <FilterInput
-              labelClassName="gf-form--has-input-icon gf-form--grow"
-              inputClassName="gf-form-input"
-              placeholder="Search devices"
-              value={searchQuery}
-              onChange={this.onSearchQueryChange}
-            />
-          </div>
+          <div className="gf-form gf-form--grow" />
 
           <div className="page-action-bar__spacer" />
 
@@ -142,7 +133,7 @@ function mapStateToProps(state: StoreState) {
     devices: getDevices(state.devices),
     searchQuery: getSearchQuery(state.devices),
     devicesCount: getDevicesCount(state.devices),
-    hasFetched: state.devices.hasFetched,
+    hasFetched: state.devices ? state.devices.hasFetched : false,
     signedInUser: contextSrv.user, // this makes the feature toggle mockable/controllable from tests,
   };
 }

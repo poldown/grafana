@@ -128,6 +128,15 @@ func (hs *HTTPServer) setIndexViewData(c *models.ReqContext) (*dtos.IndexViewDat
 		})
 	}
 
+	data.NavTree = append(data.NavTree, &dtos.NavLink{
+		Text:       "Devices",
+		Id:         "devices",
+		SubTitle:   "Manage devices",
+		Icon:       "monitoring",
+		Url:        setting.AppSubUrl + "/org/devices",
+		SortWeight: dtos.WeightDevice,
+	})
+
 	dashboardChildNavs := []*dtos.NavLink{
 		{Text: "Home", Id: "home", Url: setting.AppSubUrl + "/", Icon: "home-alt", HideFromTabs: true},
 		{Text: "Divider", Divider: true, Id: "divider", HideFromTabs: true},

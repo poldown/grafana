@@ -13,6 +13,4 @@ export interface DevicesState {
 
 export interface DeviceState {
   device: Device;
-  searchQuery: string;
-  hasFetched: boolean;
 }
