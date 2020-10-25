@@ -2,6 +2,7 @@ package sqlstore
 
 import (
 	"bytes"
+	"strconv"
 	"time"
 
 	"github.com/grafana/grafana/pkg/bus"
@@ -13,7 +14,7 @@ func init() {
 	bus.AddHandler("sql", UpdateDevice)
 	bus.AddHandler("sql", DeleteDevice)
 	bus.AddHandler("sql", SearchDevices)
-	bus.AddHandler("sql", GetDeviceById)
+	bus.AddHandler("sql", GetDeviceByID)
 	bus.AddHandler("sql", GetDevicesByOrgId)
 	bus.AddHandler("sql", GetDeviceBySN)
 	bus.AddHandler("sql", GetDeviceSensorThreshold)
@@ -26,8 +27,7 @@ func getDeviceSelectSqlBase() string {
 		device.serial_number as serial_number,
 		device.name as name,
 		device.location_gps as location_gps,
-		device.location_text as location_text,
-		device.floor as floor
+		device.location_text as location_text
 		FROM device as device `
 }
 
@@ -44,9 +44,8 @@ func CreateDevice(cmd *models.CreateDeviceCommand) error {
 			Name:         cmd.Name,
 			OrgId:        cmd.OrgId,
 			SerialNumber: cmd.SerialNumber,
-			LocationGPS:  cmd.LocationGPS,
+			LocationGps:  cmd.LocationGps,
 			LocationText: cmd.LocationText,
-			Floor:        cmd.Floor,
 			Created:      time.Now(),
 			Updated:      time.Now(),
 		}
@@ -61,8 +60,12 @@ func CreateDevice(cmd *models.CreateDeviceCommand) error {
 
 func UpdateDevice(cmd *models.UpdateDeviceCommand) error {
 	return inTransaction(func(sess *DBSession) error {
+		id, err := strconv.ParseInt(cmd.Id, 10, 64)
+		if err != nil {
+			return err
+		}
 
-		if isNameTaken, err := isDeviceNameTaken(cmd.OrgId, cmd.Name, cmd.Id, sess); err != nil {
+		if isNameTaken, err := isDeviceNameTaken(cmd.OrgId, cmd.Name, id, sess); err != nil {
 			return err
 		} else if isNameTaken {
 			return models.ErrDeviceNameTaken
@@ -71,13 +74,12 @@ func UpdateDevice(cmd *models.UpdateDeviceCommand) error {
 		device := models.Device{
 			Name:         cmd.Name,
 			SerialNumber: cmd.SerialNumber,
-			LocationGPS:  cmd.LocationGPS,
+			LocationGps:  cmd.LocationGps,
 			LocationText: cmd.LocationText,
-			Floor:        cmd.Floor,
 			Updated:      time.Now(),
 		}
 
-		affectedRows, err := sess.ID(cmd.Id).Update(&device)
+		affectedRows, err := sess.Table("device").ID(cmd.Id).Update(&device)
 
 		if err != nil {
 			return err
@@ -98,7 +100,7 @@ func DeleteDevice(cmd *models.DeleteDeviceCommand) error {
 		}
 
 		deletes := []string{
-			"DELETE FROM device WHERE org_id=? and id = ?",
+			"DELETE FROM device WHERE org_id = ? and id = ?",
 		}
 
 		for _, sql := range deletes {
@@ -111,7 +113,7 @@ func DeleteDevice(cmd *models.DeleteDeviceCommand) error {
 	})
 }
 
-func deviceExists(orgId int64, deviceId int64, sess *DBSession) (bool, error) {
+func deviceExists(orgId int64, deviceId string, sess *DBSession) (bool, error) {
 	if res, err := sess.Query("SELECT 1 from device WHERE org_id=? and id=?", orgId, deviceId); err != nil {
 		return false, err
 	} else if len(res) != 1 {
@@ -187,7 +189,7 @@ func SearchDevices(query *models.SearchDevicesQuery) error {
 	return err
 }
 
-func GetDeviceById(query *models.GetDeviceByIdQuery) error {
+func GetDeviceByID(query *models.GetDeviceByIDQuery) error {
 	var sql bytes.Buffer
 
 	sql.WriteString(getDeviceSelectSqlBase())

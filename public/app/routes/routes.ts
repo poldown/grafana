@@ -426,14 +426,13 @@ export function setupAngularRoutes($routeProvider: route.IRouteProvider, $locati
         component: () => SafeDynamicImport(import('app/features/devices/CreateDevice')),
       },
     })
-    /*.when('/org/devices/edit/:id/:page?', {
+    .when('/org/devices/edit/:id/:page?', {
       template: '<react-container />',
       reloadOnSearch: false,
       resolve: {
-        component: () => 
-          SafeDynamicImport(import('app/features/devices/DevicePages')),
+        component: () => SafeDynamicImport(import('app/features/devices/DevicePage')),
       },
-    })*/
+    })
     // LOGIN / SIGNUP
     .when('/login', {
       template: '<react-container/>',

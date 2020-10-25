@@ -4,7 +4,7 @@ import { NavModelItem } from '@grafana/data';
 export function buildNavModel(device: Device): NavModelItem {
   const navModel = {
     icon: 'device',
-    id: 'device-' + device.id,
+    id: 'device',
     subTitle: 'Manage devices',
     url: '',
     text: device.name,
@@ -13,9 +13,9 @@ export function buildNavModel(device: Device): NavModelItem {
       {
         active: false,
         icon: 'sliders-v-alt',
-        id: `device-settings-${device.id}`,
+        id: `device-${device.id}`,
         text: 'Device Settings',
-        url: `org/devices/edit/${device.id}/settings`,
+        url: `org/devices/edit/${device.id}`,
       },
     ],
   };

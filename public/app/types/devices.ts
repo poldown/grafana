@@ -1,8 +1,13 @@
 export interface Device {
-  id: number;
+  id: string;
   name: string;
   orgId: number;
   serialNumber: string;
+  locationGps: {
+    latitude: number;
+    longitude: number;
+  };
+  locationText: string;
 }
 
 export interface DevicesState {

@@ -5,7 +5,6 @@ import { Button, LegacyForms } from '@grafana/ui';
 const { FormField } = LegacyForms;
 import { NavModel } from '@grafana/data';
 import { getBackendSrv } from '@grafana/runtime';
-import { updateLocation } from '../../core/actions';
 import { connect } from 'react-redux';
 import { getNavModel } from 'app/core/selectors/navModel';
 import { StoreState } from 'app/types';
@@ -97,8 +96,4 @@ function mapStateToProps(state: StoreState) {
   };
 }
 
-const mapDispatchToProps = {
-  updateLocation,
-};
-
-export default hot(module)(connect(mapStateToProps, mapDispatchToProps)(CreateDevice));
+export default hot(module)(connect(mapStateToProps)(CreateDevice));

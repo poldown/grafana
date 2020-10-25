@@ -11,6 +11,7 @@ import { getNavModel } from 'app/core/selectors/navModel';
 import { contextSrv, User } from 'app/core/services/context_srv';
 import { connectWithCleanUp } from '../../core/components/connectWithCleanUp';
 import { setSearchQuery } from './state/reducers';
+import { FilterInput } from 'app/core/components/FilterInput/FilterInput';
 
 export interface Props {
   navModel: NavModel;
@@ -76,13 +77,21 @@ export class DevicesList extends PureComponent<Props, any> {
   }
 
   renderDevicesList() {
-    const { devices } = this.props;
+    const { devices, searchQuery } = this.props;
     const newDeviceHref = 'org/devices/new';
 
     return (
       <>
         <div className="page-action-bar">
-          <div className="gf-form gf-form--grow" />
+          <div className="gf-form gf-form--grow">
+            <FilterInput
+              labelClassName="gf-form--has-input-icon gf-form--grow"
+              inputClassName="gf-form-input"
+              placeholder="Search devices by name or serial number"
+              value={searchQuery}
+              onChange={this.onSearchQueryChange}
+            />
+          </div>
 
           <div className="page-action-bar__spacer" />
 

@@ -87,7 +87,7 @@ func (hs *HTTPServer) setIndexViewData(c *models.ReqContext) (*dtos.IndexViewDat
 		AppNameBodyClass:        getAppNameBodyClass(hs.License.HasValidLicense()),
 		FavIcon:                 "public/img/fav32.png",
 		AppleTouchIcon:          "public/img/apple-touch-icon.png",
-		AppTitle:                "Grafana",
+		AppTitle:                "RadGreen",
 	}
 
 	if setting.DisableGravatar {
@@ -132,7 +132,7 @@ func (hs *HTTPServer) setIndexViewData(c *models.ReqContext) (*dtos.IndexViewDat
 		Text:       "Devices",
 		Id:         "devices",
 		SubTitle:   "Manage devices",
-		Icon:       "monitoring",
+		Icon:       "wifi-router",
 		Url:        setting.AppSubUrl + "/org/devices",
 		SortWeight: dtos.WeightDevice,
 	})

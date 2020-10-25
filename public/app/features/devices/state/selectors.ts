@@ -1,4 +1,4 @@
-import { DevicesState } from 'app/types';
+import { DevicesState, DeviceState, Device } from 'app/types';
 //import { User } from 'app/core/services/context_srv';
 
 export const getSearchQuery = (state: DevicesState) => (state ? state.searchQuery : '');
@@ -12,6 +12,14 @@ export const getDevices = (state: DevicesState) => {
   const regex = RegExp(state.searchQuery, 'i');
 
   return state.devices.filter(device => {
-    return regex.test(device.name);
+    return regex.test(device.name) || regex.test(device.serialNumber);
   });
+};
+
+export const getDevice = (state: DeviceState, currentDeviceId: any): Device | null => {
+  if (state.device.id === currentDeviceId) {
+    return state.device;
+  }
+
+  return null;
 };

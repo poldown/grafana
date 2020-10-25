@@ -12,7 +12,7 @@ import (
 
 // GET /api/devices/:deviceId
 func GetDeviceByID(c *models.ReqContext) Response {
-	query := models.GetDeviceByIdQuery{OrgId: c.OrgId, Id: c.ParamsInt64(":deviceId")}
+	query := models.GetDeviceByIDQuery{OrgId: c.OrgId, Id: c.Params(":deviceId")}
 
 	if err := bus.Dispatch(&query); err != nil {
 		if err == models.ErrDeviceNotFound {
@@ -47,7 +47,7 @@ func (hs *HTTPServer) GetDeviceLastReading(c *models.ReqContext) Response {
 	bucket := setting.RadGreenBucketName
 	organization := setting.RadGreenOrganizationName
 
-	deviceId := c.ParamsInt64(":deviceId")
+	deviceId := c.Params(":deviceId")
 
 	js, _ := simplejson.NewJson([]byte(fmt.Sprintf(`{
 			"datasourceId": %d,
@@ -84,7 +84,7 @@ func (hs *HTTPServer) GetDeviceSensorData(c *models.ReqContext) Response {
 		field = "value"
 	}
 
-	deviceId := c.ParamsInt64(":deviceId")
+	deviceId := c.Params(":deviceId")
 	sensorType := c.Params(":sensorType")
 
 	aggregateQ := ""
@@ -161,4 +161,41 @@ func GetDeviceSensorThreshold(c *models.ReqContext) Response {
 	}
 
 	return JSON(200, &query.Result)
+}
+
+// DELETE /api/devices/:deviceId
+func DeleteDeviceByID(c *models.ReqContext) Response {
+	query := models.DeleteDeviceCommand{OrgId: c.OrgId, Id: c.Params(":deviceId")}
+
+	if !c.SignedInUser.IsGrafanaAdmin {
+		return Error(403, "Access denied", nil)
+	}
+	if err := bus.Dispatch(&query); err != nil {
+		if err == models.ErrDeviceNotFound {
+			return Error(404, "Device not found", err)
+		}
+
+		return Error(500, "Failed to delete device", err)
+	}
+
+	return Success("Device Deleted")
+}
+
+// PUT /api/devices/:deviceId
+func UpdateDevice(c *models.ReqContext, cmd models.UpdateDeviceCommand) Response {
+	cmd.OrgId = c.OrgId
+	cmd.Id = c.Params(":deviceId")
+
+	if !c.SignedInUser.IsGrafanaAdmin {
+		return Error(403, "Access denied", nil)
+	}
+	if err := bus.Dispatch(&cmd); err != nil {
+		if err == models.ErrDeviceNotFound {
+			return Error(404, "Device not found", err)
+		}
+
+		return Error(500, "Failed to update device", err)
+	}
+
+	return Success("Device Updated")
 }

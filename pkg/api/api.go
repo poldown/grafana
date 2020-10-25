@@ -177,7 +177,10 @@ func (hs *HTTPServer) registerRoutes() {
 
 		// device without requirement of user to be org admin
 		apiRoute.Group("/devices", func(devicesRoute routing.RouteRegister) {
+			//devicesRoute.Post("/", bind(models.CreateDeviceCommand{}), Wrap(hs.CreateDevice))
 			devicesRoute.Get("/:deviceId", Wrap(GetDeviceByID))
+			devicesRoute.Put("/:deviceId", bind(models.UpdateDeviceCommand{}), Wrap(UpdateDevice))
+			devicesRoute.Delete("/:deviceId", Wrap(DeleteDeviceByID))
 			devicesRoute.Get("/:deviceId/last-reading", Wrap(hs.GetDeviceLastReading))
 			devicesRoute.Get("/:deviceId/sensors/:sensorType", Wrap(hs.GetDeviceSensorData))
 			devicesRoute.Get("/:deviceId/sensors/:sensorType/threshold", Wrap(GetDeviceSensorThreshold))
